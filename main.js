@@ -35,35 +35,9 @@ function takeTurn(e) {
             player1 = "red"
         }
     }
+
     console.log(`You clicked column ${colNum}`)
     console.log(`Turn number ${turn}`)
     console.log(grid)
 }
 
-
-function getLowestAvailableRowInColumn(cynthiaColumnNumber, myGridSoItIs) {
-    for (let i = 5; i >= 0; i--) {
-        if (myGridSoItIs[i][cynthiaColumnNumber - 1] === null) {
-            return i
-        }
-    }
-    return null;
-}
-//document.getElementById(****).
-function resetGame(){
-    console.log("reset game")
-    for (i of document.getElementsByClassName('col'))
-        {
-        i.style.removeProperty('background-color');
-        }
-    
-        grid = [
-        [null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null]
-        ]
-        player = "red"
-}
