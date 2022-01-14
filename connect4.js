@@ -1,3 +1,4 @@
+
 let turn = 0
 let player1 = "red"
 
@@ -11,36 +12,50 @@ let grid = [
     [null, null, null, null, null, null, null]
 ]
 
-
-
 function takeTurn(e) {
-    const id = e.target.id   // Element Board Space ID
-    const colNum = id[8]
-    const rowNum = id[3]
-
-    const lowestAvailableRow = getLowestAvailableRowInColumn(colNum, grid)
-    console.log(`Lowest available row: ${lowestAvailableRow}`)
-    if (lowestAvailableRow !== null) {
+        const id = e.target.id   // Element Board Space ID
+        const colNum = id[8]
+        const rowNum = id[3]
         turn++
+        const lowestAvailableRow = getLowestAvailableRowInColumn(colNum, grid)
+        console.log(`Lowest available row: ${lowestAvailableRow}`)
+        if (lowestAvailableRow !== null) {
+            
 
-        if (player1 === "red") {
-            grid[lowestAvailableRow][colNum - 1] = "red"
-            document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = 'red';
-            player1 = "yellow"
-        } else {
-            grid[lowestAvailableRow][colNum - 1] = "yellow"
-            document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = 'yellow';
-            player1 = "red"
+            if (player1 === "red") {
+                grid[lowestAvailableRow][colNum - 1] = "red"
+                document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = 'red';
+                player1 = "yellow"
+            } else {
+                grid[lowestAvailableRow][colNum - 1] = "yellow"
+                document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = 'yellow';
+                player1 = "red"
+
+            }
+        }
+        console.log(`You clicked column ${colNum}`)
+        console.log(`Turn number ${turn}`)
+        let winner = checkWinner(grid)
+        console.log(`Winner: ${winner}`)
+        
+        if(winner === true) {
+            let winningPlayer
+            if (turn % 2 == 1) {//counts turn so turn odd is red and even is yellow
+                winningPlayer = "red"
+            } else {
+                winningPlayer = "yellow"
+            }
+            const showWinner = document.getElementById("showWinner")
+            showWinner.style.display = "block";
+            showWinner.textContent = `${winningPlayer} wins!`; //shows colour depending on turn
+        } 
+
+        if (turn === 42) {
+            const showWinner = document.getElementById("showWinner")
+            showWinner.textContent = 'It\'s a tie! Press reset to continue.'
         }
     }
-    console.log(`You clicked column ${colNum}`)
-    console.log(`Turn number ${turn}`)
-    let winner = checkWinner(grid)
-    console.log(`Winner: ${winner}`)
-    if (winner) {
-        // Make something on the DOM say you won!
-    }
-}
+
 
 
 function getLowestAvailableRowInColumn(columnNumber, grid) {
@@ -51,23 +66,25 @@ function getLowestAvailableRowInColumn(columnNumber, grid) {
     }
     return null;
 }
-//document.getElementById(****).
-function resetGame(){
+
+function resetGame() {
     console.log("reset game")
-    for (i of document.getElementsByClassName('col'))
-        {
+    for (i of document.getElementsByClassName('col')) {
         i.style.removeProperty('background-color');
-        }
+    }
     
-        grid = [
-            [null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null]
-        ]
-        player = "red"
+    grid = [
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null]
+    ]
+
+    player1 = "red"
+    showWinner.textContent=""
+    turn = 0
 }
 
 
@@ -81,7 +98,7 @@ function checkHorizontalWinner(grid, potentialMatches=4) {
     grid.forEach(row => { // For each row in our board
         let startPosition = 0 
         let endPosition = 4 
-        for (_ in range(potentialMatches)) {
+        for (x in range(potentialMatches)) {
             rowSlice = row.slice(startPosition, endPosition) // Scan the row for a match of 4
             if (checkWinCondition(rowSlice)) {
                 winner = true
@@ -170,9 +187,6 @@ function allString(arr) {
     // Check that all values in an array are strings
     return arr.every(value => typeof value === 'string')
 }
-
-
-
 
 
 function range(num) {
