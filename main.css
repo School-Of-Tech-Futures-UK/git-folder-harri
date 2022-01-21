@@ -9,9 +9,35 @@
     border-radius: 25px
 }
 
+.connect-4-board {
+    display: grid;
+    grid-auto-rows: 100px;
+}
 
+.col {
+    border: 1px solid black;
+}
 
+.score-table {
+    border: 1px solid black;
+    padding: 10px;
+    border-collapse: collapse;
+    width: 90%;
+    margin-left: auto;
+    max-width: 400px;
+}
 
+.score-table thead {
+    border-bottom: 1px solid black;
+}
+
+.score-table td:first-child,
+.score-table th:first-child {
+    border-right: 1px solid black;
+}
+
+.score-table td,
+.score-table th {padding: 10px}
 
 
 
