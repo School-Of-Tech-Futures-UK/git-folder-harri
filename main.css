@@ -5,17 +5,28 @@
     text-align: center;
 }
 
-.jiaqirounded{
-    border-radius: 25px
-}
+
 
 .connect-4-board {
     display: grid;
     grid-auto-rows: 100px;
+    background: #167bff;
+    gap: 10px;
+    padding: 10px;
+    justify-content: center;
+}
+
+.row {
+    gap: 10px;
 }
 
 .col {
     border: 1px solid black;
+    border-radius: 100vh;
+    height: 100px;
+    width: 100px;
+    background: white;
+    flex: none;
 }
 
 .score-table {
@@ -40,12 +51,9 @@
 .score-table th {padding: 10px}
 
 
-
-
-
-
-
-
+.field label {
+    width: 100px;
+}
 
 
 

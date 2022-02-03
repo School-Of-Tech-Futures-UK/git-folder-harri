@@ -1,20 +1,24 @@
-
-<html>
-
-<head>
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <title>connect4 game</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Connect 4 Game">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
-
-
     <link rel="stylesheet" href="main.css" />
+
+    <style> #header{text-align: center}</style>
 </head>
 
 <body onload="fetchScore()">
     <h1 id="header">connect4</h1>
-    <script src="./connect4.js" crossorigin="anonymous"></script>
 
     <div id="connect4Board" class="connect-4-board">
         <div class="row">
@@ -81,80 +85,32 @@
             <div id="showWinner"></div>
             <div>
                 <ul id="highscore"></ul>
-                <table>
-                    <tr>
-                        <th>Name:</th>
-                        <td><input type="text" id="name" /></td>
-                    </tr>
-                    <tr>
-                        <td>Colour:</td>
-                        <td><input type="number" id="weight" /></td>
-                    </tr>
-                    <tr>
-                        <td>High Score:</td>
-                        <td><input type="text" id="score" /></td>
-                    </tr>
-        
-                    <tr>
-                        <th>Name:</th>
-                        <td><input type="text" id="name" /></td>
-                    </tr>
-                    <tr>
-                        <td>Colour:</td>
-                        <td><input type="number" id="weight" /></td>
-                    </tr>
-                    <tr>
-                        <td>High Score:</td>
-                        <td><input type="text" id="score" /></td>
-                    </tr>
-                </table>
+                <div class="field">
+                    <label for="name">Next Turn: </label>
+                    <input type="text" id="name" name="name" />
+                </div>
+                <div class="field">
+                    <label for="score">Score:</label>
+                    <input type="text" id="score" name="score" />
+                </div>
             </div>
         </div>
 
         <div id="box">
 
         </div>
-        <!-- <table class="score-table" id="scoreDetails-table">
+        <table class="score-table" id="scoreDetails-table">
             <thead>
                 <tr>
                     <th>Score</th>
                     <th>Player</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>0</td>
-                    <td>Player Name</td>
-                    
-                </tr>
-                <tr>
-                    <td>0</td>
-                    <td>Player Name</td>
-                   
-                </tr>
-                <tr>
-                    <td>0</td>
-                    <td>Player Name</td>
-                    
-                </tr>
-                <tr>
-                    <td>0</td>
-                    <td>Player Name</td>
-                    
-                </tr>
-                <tr>
-                    <td>0</td>
-                    <td>Player Name</td>
-                    
-                </tr>
-                <tr>
-                    <td>0</td>
-                    <td>Player Name</td>
-                   
-                </tr>              
+            <tbody id="putHere">              
             </tbody>
-        </table> -->
+        </table>
     </div>
+    <script src="./connect4.js" crossorigin="anonymous"></script>
 
 </body>
 

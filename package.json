@@ -2,6 +2,7 @@
   "name": "package",
   "version": "1.0.0",
   "main": "connect4.js",
+   
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js"
@@ -69,6 +70,7 @@
     "is-extglob": "^2.1.1",
     "is-glob": "^4.0.3",
     "isexe": "^2.0.0",
+    "jest": "^27.4.7",
     "js-yaml": "^4.1.0",
     "json-schema-traverse": "^0.4.1",
     "json-stable-stringify-without-jsonify": "^1.0.1",

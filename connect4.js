@@ -6,6 +6,8 @@ let player1 = "red"
 let highScore = 42 - turn
 var menu_tags = []
 
+const nameInput = document.querySelector('#name')
+nameInput.value = player1
 
 let grid = [
 	[null, null, null, null, null, null, null],
@@ -17,34 +19,34 @@ let grid = [
 ]
 
 function takeTurn(e) {
+	playSound('countersound.wav')
 	const id = e.target.id   // Element Board Space ID
 	const colNum = id[8]
-	const rowNum = id[3]
 	turn++
 	highScore = 42 - turn
 	const lowestAvailableRow = getLowestAvailableRowInColumn(colNum, grid)
-	console.log(`Lowest available row: ${lowestAvailableRow}`)
 	if (winner !== true) {
 		if (lowestAvailableRow !== null) {
-            
+			
 
 			if (player1 === "red") {
 				grid[lowestAvailableRow][colNum - 1] = "red"
-				document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = 'red';
+				document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = "red";
 				player1 = "yellow"
 			} else {
 				grid[lowestAvailableRow][colNum - 1] = "yellow"
-				document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = 'yellow';
+				document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = "yellow";
 				player1 = "red"
 
 			}
 		}
-		console.log(`You clicked column ${colNum}`)
-		console.log(`Turn number ${turn}`)
+
+		nameInput.value = player1
 		winner = checkWinner(grid)
-		console.log(`Winner: ${winner}`)
+	
         
 		if(winner === true) {
+			playSound('victory.mp3')
 			let winningPlayer
 			if (turn % 2 == 1) {//counts turn so turn odd is red and even is yellow
 				winningPlayer = "red"
@@ -53,23 +55,29 @@ function takeTurn(e) {
 			}
 
 			score(highScore, winningPlayer)
-            // setTimeout(() => {
-            //     fetchScore()
-            // }, 5000);
+			// setTimeout(() => {
+			//     fetchScore()
+			// }, 5000);
 
 			const showWinner = document.getElementById("showWinner")
-			showWinner.style.display = "block";
-			showWinner.textContent = `${winningPlayer} wins!`; //shows colour depending on turn
-        } 
+			console.log(showWinner)
+			showWinner.textContent = `${winningPlayer} wins!` //shows colour depending on turn
+		} 
 
 		if (turn === 42) {
 			const showWinner = document.getElementById("showWinner")
-			showWinner.textContent = 'It\'s a tie! Press reset to continue.'
+			showWinner.textContent = "It's a tie! Press reset to continue."
 		}
 	}
 }
 
-function score(highScore, winningPlayer) {
+function playSound(src){
+	// From stackvoerflow: https://www.stackoverflow.com/questions/9419263/how-to-play-audio
+	var audio = new Audio(src)
+	audio.play()
+}
+
+function score(highScore, winningPlayer) { 
 	document.getElementById("score").value = highScore
 	fetch("http://localhost:3000/score", {
 		method: "POST",
@@ -81,32 +89,27 @@ function score(highScore, winningPlayer) {
 			player: winningPlayer
 		})
 	})
-
 }
 
 function fetchScore() {
-    fetch("http://localhost:3000/score", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }) 
-        .then((response) => response.json())  
-        .then((data) => {
-            menu_tags.push(data.user)
-            var html = "<table border='1|1'><thead><tr><th>Score</th><th>Player name</th></tr></thead>";
-for (var i = 0; i < menu_tags.length; i++) {
-    html+="<tr>";
-    html+="<td>"+menu_tags[i].score+"</td>";
-    html+="<td>"+menu_tags[i].player+"</td>";
-    
-    html+="</tr>";
+	fetch("http://localhost:3000/score", {
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json"
+		}
+	}) 
+		.then((response) => response.json())  
+		.then((data) => {
+			menu_tags.push(data)
+			var table_data = menu_tags[0]
+			var html;
+			table_data.forEach(function(e, i) {
+				html += "<tr>" + "<td>" + e.score + "</td>" + 
+								 "<td>" + e.player + "</td>" + "</tr>"
+			})
+			document.getElementById("putHere").innerHTML = html
 
-}
-html+="</table>";
-document.getElementById("box").innerHTML = html;
-
-        })
+		})
 }
 
 
@@ -122,8 +125,8 @@ function getLowestAvailableRowInColumn(columnNumber, grid) {
 
 function resetGame() {
 	console.log("reset game")
-	for (i of document.getElementsByClassName('col')) {
-		i.style.removeProperty('background-color');
+	for (i of document.getElementsByClassName("col")) {
+		i.style.removeProperty("background-color")
 	}
     
 	grid = [
@@ -136,6 +139,7 @@ function resetGame() {
 	]
 
 	player1 = "red"
+	nameInput.value = player1
 	showWinner.textContent = ""
 	winner = false
 	turn = 0
@@ -148,14 +152,14 @@ function checkWinner(grid) {
 	return checkDiagonalWinner(grid) || checkHorizontalWinner(grid) || checkVerticalWinner(grid)
 }
 
-function checkHorizontalWinner(grid, potentialMatches=4) {
-	// Scan every match of 4 in a row (or column) for the win condition.
+function scanGridForWinner(grid, matchesPerRow=4) {
+	// Scans a grid (array of arrays) for 4 matching non-null values.
 	let winner = false
 	grid.forEach(row => { // For each row in our board
 		let startPosition = 0 
 		let endPosition = 4 
-		for (x in range(potentialMatches)) {
-			rowSlice = row.slice(startPosition, endPosition) // Scan the row for a match of 4
+		for (x in range(matchesPerRow)) {
+			let rowSlice = row.slice(startPosition, endPosition) // Scan the row for a match of 4
 			if (checkWinCondition(rowSlice)) {
 				winner = true
 			}
@@ -164,35 +168,41 @@ function checkHorizontalWinner(grid, potentialMatches=4) {
 		}
 	})
 	return winner
-}
+} 
+
+const checkHorizontalWinner = scanGridForWinner
 
 
 function checkVerticalWinner(grid) {
-	let winner = false
+	// Checks a grid for a vertical 4 stack winner.
+	let rotatedGrid = rotateGrid(grid)
+	return scanGridForWinner(rotatedGrid, 3)
+}
 
-	// Turn the board 
-	const columns = [] // Create a container for the columns
+function rotateGrid(grid) {
+	// Rotates a grid (array of arrays) on it's side, changing columns to rows and rows to columns.
+	const rotatedGrid = [] // Create a container for the columns
 	for (i in range(grid[0].length)) { // For each column in our grid
-		columns.push([])  // Create an empty column inside of our columns container
+		let column = []
 		grid.forEach(row => {
-			columns[i].push(row[i])
+			column.push(row[i])
 		})
+		rotatedGrid.push(column)  // Create an empty column inside of our columns container
 	}
-	winner = checkHorizontalWinner(columns, 3)
-	return winner
+	return rotatedGrid
 }
 
 function checkDiagonalWinner(grid) {
 	let winner = false
-	let potentialVerticalPosition = 3
-	let potentialHorizontalPosition = 4
+	let potentialVerticalPositions = 3
+	let potentialHorizontalPositions = 4
 
 	// For every available vertical 4x4 subgrid in our game board...
-	for (y in range(potentialVerticalPosition)) {
+	for (y in range(potentialVerticalPositions)) {
 		y = Number(y)
 
 		// For every available vertical 4x4 subgrid in our game board...
-		for (x in range(potentialHorizontalPosition)) {
+		for (x in range(potentialHorizontalPositions)) {
 			x = Number(x)
 
 			// []
@@ -241,7 +251,7 @@ function allEqual(slice) {
 
 function allString(arr) {
 	// Check that all values in an array are strings
-	return arr.every(value => typeof value === 'string')
+	return arr.every(value => typeof value === "string")
 }
 
 
@@ -251,6 +261,7 @@ function range(num) {
 	return [...Array(num).keys()]
 }
 
+module.exports = {checkHorizontalWinner}
 //////////////////////////////////////////////////////////////////////
 /*const highScore = async () => {
 	const resp = await fetch("http://localhost:3000/Server")
