@@ -1,12 +1,12 @@
 
 let turn = 0
-let game = 0
+
 let winner = false
 let player1 = "red"
 let highScore = 42 - turn
 var menu_tags = []
 
-const nameInput = document.querySelector('#name')
+const nameInput = window.document.querySelector("#name")
 nameInput.value = player1
 
 let grid = [
@@ -19,7 +19,7 @@ let grid = [
 ]
 
 function takeTurn(e) {
-	playSound('countersound.wav')
+	playSound("countersound.wav")
 	const id = e.target.id   // Element Board Space ID
 	const colNum = id[8]
 	turn++
@@ -31,11 +31,11 @@ function takeTurn(e) {
 
 			if (player1 === "red") {
 				grid[lowestAvailableRow][colNum - 1] = "red"
-				document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = "red";
+				document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = "red"
 				player1 = "yellow"
 			} else {
 				grid[lowestAvailableRow][colNum - 1] = "yellow"
-				document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = "yellow";
+				document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = "yellow"
 				player1 = "red"
 
 			}
@@ -46,7 +46,7 @@ function takeTurn(e) {
 	
         
 		if(winner === true) {
-			playSound('victory.mp3')
+			playSound("victory.mp3")
 			let winningPlayer
 			if (turn % 2 == 1) {//counts turn so turn odd is red and even is yellow
 				winningPlayer = "red"
@@ -102,10 +102,10 @@ function fetchScore() {
 		.then((data) => {
 			menu_tags.push(data)
 			var table_data = menu_tags[0]
-			var html;
-			table_data.forEach(function(e, i) {
+			var html
+			table_data.forEach(function(e) {
 				html += "<tr>" + "<td>" + e.score + "</td>" + 
-								 "<td>" + e.player + "</td>" + "</tr>"
+								"<td>" + e.player + "</td>" + "</tr>"
 			})
 			document.getElementById("putHere").innerHTML = html
 
@@ -125,7 +125,7 @@ function getLowestAvailableRowInColumn(columnNumber, grid) {
 
 function resetGame() {
 	console.log("reset game")
-	for (i of document.getElementsByClassName("col")) {
+	for (let i of document.getElementsByClassName("col")) {
 		i.style.removeProperty("background-color")
 	}
     
@@ -140,11 +140,12 @@ function resetGame() {
 
 	player1 = "red"
 	nameInput.value = player1
+	const showWinner = document.getElementById("showWinner")
 	showWinner.textContent = ""
 	winner = false
 	turn = 0
 	highScore = 0
-	score(highScore)
+	//score(highScore)
 }
 
 
@@ -158,7 +159,7 @@ function scanGridForWinner(grid, matchesPerRow=4) {
 	grid.forEach(row => { // For each row in our board
 		let startPosition = 0 
 		let endPosition = 4 
-		for (x in range(matchesPerRow)) {
+		for (let i in range(matchesPerRow)) {
 			let rowSlice = row.slice(startPosition, endPosition) // Scan the row for a match of 4
 			if (checkWinCondition(rowSlice)) {
 				winner = true
@@ -170,8 +171,7 @@ function scanGridForWinner(grid, matchesPerRow=4) {
 	return winner
 } 
 
-const checkHorizontalWinner = scanGridForWinner
-
+let checkHorizontalWinner = scanGridForWinner
 
 function checkVerticalWinner(grid) {
 	// Checks a grid for a vertical 4 stack winner.
@@ -182,7 +182,7 @@ function checkVerticalWinner(grid) {
 function rotateGrid(grid) {
 	// Rotates a grid (array of arrays) on it's side, changing columns to rows and rows to columns.
 	const rotatedGrid = [] // Create a container for the columns
-	for (i in range(grid[0].length)) { // For each column in our grid
+	for (let i in range(grid[0].length)) { // For each column in our grid
 		let column = []
 		grid.forEach(row => {
 			column.push(row[i])
@@ -196,13 +196,13 @@ function checkDiagonalWinner(grid) {
 	let winner = false
 	let potentialVerticalPositions = 3
 	let potentialHorizontalPositions = 4
-
+	
 	// For every available vertical 4x4 subgrid in our game board...
-	for (y in range(potentialVerticalPositions)) {
+	for (let y in range(potentialVerticalPositions)) {
 		y = Number(y)
 
 		// For every available vertical 4x4 subgrid in our game board...
-		for (x in range(potentialHorizontalPositions)) {
+		for (let x in range(potentialHorizontalPositions)) {
 			x = Number(x)
 
 			// []
@@ -261,33 +261,8 @@ function range(num) {
 	return [...Array(num).keys()]
 }
 
-module.exports = {checkHorizontalWinner}
-//////////////////////////////////////////////////////////////////////
-/*const highScore = async () => {
-	const resp = await fetch("http://localhost:3000/Server")
-	return await resp.json()
+module.exports = {
+	takeTurn,
+	fetchScore,
+	resetGame
 }
-
-
-
-const addInfo = async (e) => {
-    const name = document.getElementById('name').value
-    const weight = document.getElementById('weight').value
-    const power = document.getElementById('power').value
-
-    const pokemon = JSON.stringify(
-        {
-            name: name,
-            weight: Number(weight),
-            magicPower: power
-        }
-    )
-
-highScore().then(
-	json => json.forEach(pokemon => {
-		const listElement = document.createElement('li')
-		listElement.innerHTML = `Pokemon: ${pokemon.name}`
-		document.getElementById('pokemonlist').appendChild(listElement)
-	}
-	)
-)*/
